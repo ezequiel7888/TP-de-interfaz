@@ -1,0 +1,22 @@
+Guardá acá tus capturas de pantalla con estos nombres exactos
+para que aparezcan en el informe (documento/informe.html):
+
+  figura-1.png   → Selección de rol (pantalla inicial)
+  figura-2.png   → Votante: identificación (DNI)
+  figura-3.png   → Votante: boleta electoral
+  figura-4.png   → Votante: confirmación del voto
+  figura-5.png   → Votante: comprobante + opción de deshacer
+  figura-6.png   → Candidato: panel de transparencia
+  figura-7.png   → Responsable: panel de control de mesas
+  figura-8.png   → Responsable: registro de incidentes
+  figura-9.png   → Tribunal: panel de integridad y auditoría
+  figura-10.png  → Recuperación de errores (mensaje de validación)
+
+Cómo sacar cada captura:
+1. Abrí la app en http://localhost:5173
+2. Navegá a la pantalla que quieras capturar
+3. Presioná Win + Shift + S, seleccioná el área y pegá en Paint o
+   simplemente guardá el recorte con el nombre de la lista.
+
+Si una imagen no existe, el informe muestra un recuadro indicando
+qué archivo falta. Cuando las agregues, se ven automáticamente.

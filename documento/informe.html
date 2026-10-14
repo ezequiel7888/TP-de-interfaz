@@ -1,0 +1,459 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Informe · Sistema de votación para elección de intendente</title>
+    <style>
+      :root {
+        --ink: #1c2233;
+        --muted: #5c6678;
+        --line: #d8dfea;
+        --accent: #4f46e5;
+        --soft: #f2f4fa;
+        --alta: #15803d;
+        --media: #b45309;
+        --baja: #6b7280;
+        --nula: #b91c1c;
+      }
+      * { box-sizing: border-box; }
+      body {
+        margin: 0;
+        font-family: 'Segoe UI', system-ui, Arial, sans-serif;
+        color: var(--ink);
+        line-height: 1.6;
+        background: #eef1f6;
+      }
+      .hoja {
+        max-width: 820px;
+        margin: 0 auto;
+        background: #fff;
+        padding: 48px 56px 64px;
+      }
+      .print-bar {
+        position: sticky;
+        top: 0;
+        background: var(--accent);
+        color: #fff;
+        padding: 12px 20px;
+        text-align: center;
+        font-size: 14px;
+      }
+      .print-bar button {
+        font: inherit;
+        font-weight: 700;
+        background: #fff;
+        color: var(--accent);
+        border: none;
+        border-radius: 8px;
+        padding: 8px 16px;
+        cursor: pointer;
+        margin-left: 10px;
+      }
+      .aviso-editor {
+        background: #fff8e1;
+        border: 1px dashed #e0a800;
+        border-radius: 10px;
+        padding: 14px 18px;
+        font-size: 13.5px;
+        margin-bottom: 28px;
+      }
+      h1 { font-size: 30px; margin: 0 0 6px; letter-spacing: -0.02em; }
+      h2 {
+        font-size: 21px;
+        margin: 40px 0 12px;
+        padding-bottom: 6px;
+        border-bottom: 2px solid var(--line);
+      }
+      h3 { font-size: 16px; margin: 22px 0 8px; }
+      p { margin: 0 0 12px; }
+      .portada { text-align: center; padding: 40px 0 24px; border-bottom: 3px solid var(--accent); }
+      .portada .materia { text-transform: uppercase; letter-spacing: 0.16em; font-size: 12px; color: var(--accent); font-weight: 700; }
+      .portada .sub { color: var(--muted); font-size: 16px; margin-top: 10px; }
+      .portada .datos { margin-top: 26px; color: var(--muted); font-size: 14px; }
+      ul, ol { margin: 0 0 14px; padding-left: 22px; }
+      li { margin-bottom: 6px; }
+      code {
+        background: var(--soft);
+        padding: 1px 6px;
+        border-radius: 5px;
+        font-family: Consolas, monospace;
+        font-size: 13px;
+      }
+      .callout {
+        background: var(--soft);
+        border-left: 4px solid var(--accent);
+        border-radius: 0 10px 10px 0;
+        padding: 14px 18px;
+        margin: 16px 0;
+      }
+      table { width: 100%; border-collapse: collapse; margin: 16px 0; font-size: 13.5px; }
+      th, td { border: 1px solid var(--line); padding: 8px 10px; text-align: left; vertical-align: top; }
+      th { background: var(--soft); font-size: 12.5px; text-transform: uppercase; letter-spacing: 0.04em; }
+      .lvl { font-weight: 700; white-space: nowrap; }
+      .lvl-alta { color: var(--alta); }
+      .lvl-media { color: var(--media); }
+      .lvl-baja { color: var(--baja); }
+      .lvl-nula { color: var(--nula); }
+      figure {
+        margin: 20px 0;
+        border: 1px solid var(--line);
+        border-radius: 12px;
+        overflow: hidden;
+        page-break-inside: avoid;
+        background: #fbfcfe;
+      }
+      figure img { display: block; width: 100%; height: auto; }
+      .placeholder {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 220px;
+        margin: 14px;
+        border: 2px dashed var(--line);
+        border-radius: 10px;
+        color: var(--muted);
+        font-size: 14px;
+        text-align: center;
+        padding: 20px;
+        background: repeating-linear-gradient(45deg, #fafbfd, #fafbfd 12px, #f2f4fa 12px, #f2f4fa 24px);
+      }
+      figcaption {
+        padding: 12px 16px;
+        font-size: 13.5px;
+        border-top: 1px solid var(--line);
+        background: #fff;
+      }
+      figcaption strong { color: var(--accent); }
+      .ref { color: var(--accent); font-weight: 700; }
+      .firma { margin-top: 48px; border-top: 1px solid var(--line); padding-top: 18px; color: var(--muted); font-size: 13px; }
+
+      @page { size: A4; margin: 18mm; }
+      @media print {
+        body { background: #fff; }
+        .print-bar, .aviso-editor { display: none !important; }
+        .hoja { max-width: none; padding: 0; }
+        h2 { break-after: avoid; }
+        figure { break-inside: avoid; }
+        .portada { break-after: page; }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="print-bar">
+      Informe del trabajo — usá <strong>Imprimir → Guardar como PDF</strong> para entregar.
+      <button onclick="window.print()">🖨️ Imprimir / PDF</button>
+    </div>
+
+    <div class="hoja">
+      <div class="aviso-editor">
+        <strong>Nota para armar el informe:</strong> guardá tus capturas en
+        <code>documento/img/</code> con los nombres <code>figura-1.png</code> …
+        <code>figura-10.png</code> (ver <code>documento/img/LEEME.txt</code>). Mientras falten,
+        cada figura muestra un recuadro indicando el archivo que hay que agregar. Este aviso no
+        se imprime.
+      </div>
+
+      <!-- ===================== PORTADA ===================== -->
+      <header class="portada">
+        <p class="materia">Trabajo práctico de interfaz de usuario</p>
+        <h1>Sistema de soporte al voto</h1>
+        <p class="sub">Elección de intendente en Córdoba Capital · Interfaz para los cuatro tipos de participantes</p>
+        <div class="datos">
+          <p><strong>Materia:</strong> Diseño de Interfaces de Usuario</p>
+          <p><strong>Integrante:</strong> ____________________________</p>
+          <p><strong>Docente:</strong> ____________________________</p>
+          <p><strong>Fecha de entrega:</strong> ____ / ____ / ______</p>
+        </div>
+      </header>
+
+      <!-- ===================== 1 ===================== -->
+      <h2>1. Introducción y objetivo</h2>
+      <p>
+        En la ciudad de Córdoba Capital se realizan las elecciones de intendente. Este trabajo presenta un
+        <strong>sistema de soporte al voto</strong> que cubre las interfaces necesarias para que
+        el proceso se lleve a cabo de forma clara, segura y confiable.
+      </p>
+      <p>
+        El objetivo de la interfaz no es sólo permitir votar, sino
+        <strong>capturar bien los datos</strong> y responder a las necesidades de
+        <strong>todos los participantes</strong> que intervienen en la elección. Para eso se
+        analizaron cuatro roles (votante, candidato, responsable de las elecciones y tribunal) y
+        se priorizaron los criterios heurísticos de usabilidad de Jakob Nielsen según lo que cada
+        uno valora.
+      </p>
+      <div class="callout">
+        <strong>Idea central:</strong> los votantes y candidatos priorizan
+        <strong>no equivocarse y poder deshacer un error</strong>, mientras que el responsable y
+        el tribunal priorizan la <strong>prevención de errores, la velocidad y la trazabilidad</strong>
+        del proceso. La interfaz se diseñó para cubrir ambos frentes.
+      </div>
+
+      <!-- ===================== 2 ===================== -->
+      <h2>2. Descripción del sistema</h2>
+      <p>
+        El sistema se implementó como una aplicación web (React) que <strong>no necesita base de
+        datos</strong>: el estado se conserva en el navegador para poder demostrar el
+        funcionamiento completo. Al ingresar se elige el tipo de participante y cada uno accede a
+        su propia interfaz:
+      </p>
+      <ul>
+        <li><strong>Votante:</strong> emite su voto en tres pasos, eligiendo entre los candidatos (intendente y vicepresidente) o el <em>voto en blanco</em>, y recibe un comprobante.</li>
+        <li><strong>Candidato:</strong> consulta la transparencia del escrutinio y puede pedir un recuento.</li>
+        <li><strong>Responsable de las elecciones:</strong> administra las mesas y registra/resuelve incidentes.</li>
+        <li><strong>Tribunal Electoral:</strong> fiscaliza, controla la integridad y certifica los resultados.</li>
+      </ul>
+      <p>
+        La pantalla inicial de selección de rol es el punto de entrada y se muestra en la
+        <span class="ref">Figura 1</span>.
+      </p>
+
+      <figure>
+        <img src="img/figura-1.png" alt="Pantalla de selección de rol" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';" />
+        <div class="placeholder" style="display:none">📸 Falta la imagen: guardá tu captura como <code>img/figura-1.png</code></div>
+        <figcaption>
+          <strong>Figura 1.</strong> Pantalla de selección de rol. Se muestra el estado general de
+          la elección (votos registrados, mesas abiertas y participación) y las cuatro tarjetas
+          para ingresar como cada tipo de participante, con las prioridades de usabilidad de cada uno.
+        </figcaption>
+      </figure>
+
+      <!-- ===================== 3 ===================== -->
+      <h2>3. Análisis de los participantes y sus prioridades</h2>
+      <p>
+        La consigna describe qué valora cada participante. Esa lectura se tradujo en niveles de
+        prioridad (<span class="lvl lvl-alta">Alta</span>,
+        <span class="lvl lvl-media">Media</span>,
+        <span class="lvl lvl-baja">Baja</span>,
+        <span class="lvl lvl-nula">Sin interés</span>) para cada criterio heurístico:
+      </p>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Criterio (Nielsen)</th>
+            <th>Votante</th>
+            <th>Candidato</th>
+            <th>Responsable</th>
+            <th>Tribunal</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>1. Visibilidad del estado del sistema</td><td class="lvl lvl-alta">Alta</td><td class="lvl lvl-media">Media</td><td class="lvl lvl-alta">Alta</td><td class="lvl lvl-media">Media</td></tr>
+          <tr><td>2. Coincidencia (sistema ↔ mundo real)</td><td class="lvl lvl-media">Media</td><td class="lvl lvl-baja">Baja</td><td class="lvl lvl-baja">Baja</td><td class="lvl lvl-baja">Baja</td></tr>
+          <tr><td>3. Control y libertad</td><td class="lvl lvl-media">Media</td><td class="lvl lvl-baja">Baja</td><td class="lvl lvl-alta">Alta</td><td class="lvl lvl-baja">Baja</td></tr>
+          <tr><td>4. Consistencia y estándares</td><td class="lvl lvl-media">Media</td><td class="lvl lvl-media">Media</td><td class="lvl lvl-media">Media</td><td class="lvl lvl-nula">Sin interés</td></tr>
+          <tr><td>5. Prevención de errores</td><td class="lvl lvl-media">Media</td><td class="lvl lvl-alta">Alta</td><td class="lvl lvl-alta">Alta</td><td class="lvl lvl-alta">Alta</td></tr>
+          <tr><td>6. Reconocer antes que recordar</td><td class="lvl lvl-alta">Alta</td><td class="lvl lvl-media">Media</td><td class="lvl lvl-alta">Alta</td><td class="lvl lvl-media">Media</td></tr>
+          <tr><td>7. Flexibilidad y eficiencia de uso</td><td class="lvl lvl-alta">Alta</td><td class="lvl lvl-alta">Alta</td><td class="lvl lvl-alta">Alta</td><td class="lvl lvl-media">Media</td></tr>
+          <tr><td>8. Estética y diseño minimalista</td><td class="lvl lvl-media">Media</td><td class="lvl lvl-baja">Baja</td><td class="lvl lvl-baja">Baja</td><td class="lvl lvl-nula">Sin interés</td></tr>
+          <tr><td>9. Recuperación de errores</td><td class="lvl lvl-alta">Alta</td><td class="lvl lvl-alta">Alta</td><td class="lvl lvl-alta">Alta</td><td class="lvl lvl-alta">Alta</td></tr>
+          <tr><td>10. Ayuda y documentación</td><td class="lvl lvl-media">Media</td><td class="lvl lvl-baja">Baja</td><td class="lvl lvl-baja">Baja</td><td class="lvl lvl-nula">Sin interés</td></tr>
+          <tr><td>Rendimiento y velocidad (factor de usabilidad)</td><td class="lvl lvl-alta">Alta</td><td class="lvl lvl-alta">Alta</td><td class="lvl lvl-alta">Alta</td><td class="lvl lvl-alta">Alta</td></tr>
+        </tbody>
+      </table>
+
+      <h3>Justificación por rol</h3>
+      <ul>
+        <li><strong>Votante:</strong> no quiere perder tiempo aprendiendo (reconocimiento alto), y
+          aunque prefiere que los errores no ocurran, <em>poder deshacer un error es lo más
+          importante</em> (recuperación alta). La velocidad es crítica si retrasa el voto.</li>
+        <li><strong>Candidato:</strong> es el más preocupado por los errores porque no controla el
+          proceso; por eso la prevención y la recuperación son altas, igual que el rendimiento.</li>
+        <li><strong>Responsable:</strong> necesita que la elección salga bien y <em>se perciba</em>
+          así; por eso eficiencia, prevención, recuperación, aprendizaje y reconocimiento son
+          prioritarios, y quedan en segundo plano la estética, la documentación y la coincidencia.</li>
+        <li><strong>Tribunal:</strong> su prioridad es la honestidad del proceso: prevención de
+          errores, rendimiento y recuperación. Flexibilidad, estética, consistencia y documentación
+          no le interesan.</li>
+      </ul>
+
+      <!-- ===================== 4 ===================== -->
+      <h2>4. Marco teórico: criterios heurísticos de Nielsen</h2>
+      <p>
+        Los criterios de usabilidad de Jakob Nielsen son reglas generales que permiten evaluar una
+        interfaz. Este trabajo aplica los diez criterios clásicos:
+      </p>
+      <ol>
+        <li>Visibilidad del estado del sistema.</li>
+        <li>Relación entre el sistema y el mundo real.</li>
+        <li>Control y libertad del usuario.</li>
+        <li>Consistencia y estándares.</li>
+        <li>Prevención de errores.</li>
+        <li>Reconocer antes que recordar.</li>
+        <li>Flexibilidad y eficiencia de uso.</li>
+        <li>Estética y diseño minimalista.</li>
+        <li>Ayudar a los usuarios a reconocer, diagnosticar y recuperarse de errores.</li>
+        <li>Ayuda y documentación.</li>
+      </ol>
+      <p>
+        A partir de ellos se analizó el peso de cada uno para los cuatro participantes
+        (sección 3) y, en función de ese peso, se diseñaron las interfaces que se describen a
+        continuación.
+      </p>
+
+      <!-- ===================== 5 ===================== -->
+      <h2>5. Interfaces y explicación</h2>
+
+      <h3>5.1. Votante</h3>
+      <p>
+        El flujo del votante tiene <strong>tres pasos visibles</strong> (indicador de progreso) y
+        termina en un comprobante. Se priorizó el aprendizaje instantáneo, la prevención de errores
+        y —sobre todo— la posibilidad de <strong>deshacer</strong>.
+      </p>
+
+      <figure>
+        <img src="img/figura-2.png" alt="Pantalla de identificación del votante" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';" />
+        <div class="placeholder" style="display:none">📸 Falta la imagen: guardá tu captura como <code>img/figura-2.png</code></div>
+        <figcaption>
+          <strong>Figura 2.</strong> Identificación del votante (paso 1 de 3). Tiene un solo campo
+          (DNI) y un solo botón, por lo que no requiere aprendizaje. Si el dato es inválido, aparece
+          un mensaje de error claro en color, sin perder lo escrito (criterio 9).
+        </figcaption>
+      </figure>
+
+      <figure>
+        <img src="img/figura-3.png" alt="Boleta electoral" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';" />
+        <div class="placeholder" style="display:none">📸 Falta la imagen: guardá tu captura como <code>img/figura-3.png</code></div>
+        <figcaption>
+          <strong>Figura 3.</strong> Boleta electoral (paso 2 de 3). Cada candidato se muestra con
+          nombre, <strong>vicepresidente</strong>, partido, lista y lema, para que el votante
+          <em>reconozca</em> en vez de recordar (criterio 6). Al final se ofrece la opción
+          <strong>«Voto en blanco»</strong>, separada del resto. El botón «Continuar» se habilita
+          recién al elegir una opción, lo que evita el error de avanzar sin seleccionar (criterio 5).
+        </figcaption>
+      </figure>
+
+      <figure>
+        <img src="img/figura-4.png" alt="Confirmación del voto" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';" />
+        <div class="placeholder" style="display:none">📸 Falta la imagen: guardá tu captura como <code>img/figura-4.png</code></div>
+        <figcaption>
+          <strong>Figura 4.</strong> Confirmación (paso 3 de 3). Se muestra un resumen del voto
+          (candidato, documento parcialmente oculto y mesa asignada). El botón «Corregir» permite
+          volver atrás antes de confirmar: doble control frente a un error (criterios 3 y 5).
+        </figcaption>
+      </figure>
+
+      <figure>
+        <img src="img/figura-5.png" alt="Comprobante con opción de deshacer" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';" />
+        <div class="placeholder" style="display:none">📸 Falta la imagen: guardá tu captura como <code>img/figura-5.png</code></div>
+        <figcaption>
+          <strong>Figura 5.</strong> Comprobante de voto. Confirma al votante que el voto quedó
+          registrado y le entrega un <strong>número de comprobante</strong> (visibilidad y
+          confianza, criterio 1). Durante 15 segundos se muestra una cuenta regresiva con el botón
+          <strong>«Deshacer voto»</strong>, que materializa la prioridad del votante de revertir un
+          error (criterio 9). Pasado el tiempo, el voto queda cerrado.
+        </figcaption>
+      </figure>
+
+      <h3>5.2. Candidato</h3>
+      <figure>
+        <img src="img/figura-6.png" alt="Panel del candidato" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';" />
+        <div class="placeholder" style="display:none">📸 Falta la imagen: guardá tu captura como <code>img/figura-6.png</code></div>
+        <figcaption>
+          <strong>Figura 6.</strong> Panel del candidato. Muestra los resultados provisorios, el
+          estado de integridad y el botón «Solicitar recuento». Como el candidato no controla el
+          proceso, la interfaz le da transparencia (criterio 1) y una vía concreta de
+          <strong>recuperación</strong> ante una posible diferencia (criterio 9).
+        </figcaption>
+      </figure>
+
+      <h3>5.3. Responsable de las elecciones</h3>
+      <figure>
+        <img src="img/figura-7.png" alt="Panel de control de mesas" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';" />
+        <div class="placeholder" style="display:none">📸 Falta la imagen: guardá tu captura como <code>img/figura-7.png</code></div>
+        <figcaption>
+          <strong>Figura 7.</strong> Panel de control de mesas. Cada mesa se abre o cierra con un
+          clic y muestra su avance; hay acciones masivas «Abrir todas» / «Cerrar todas». Está pensado
+          para ser <strong>eficiente</strong> y de <strong>aprendizaje sencillo</strong>, y para
+          prevenir errores en el manejo de las mesas (criterios 5 y 7). El cierre de la jornada pide
+          confirmación.
+        </figcaption>
+      </figure>
+
+      <figure>
+        <img src="img/figura-8.png" alt="Registro de incidentes" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';" />
+        <div class="placeholder" style="display:none">📸 Falta la imagen: guardá tu captura como <code>img/figura-8.png</code></div>
+        <figcaption>
+          <strong>Figura 8.</strong> Registro y seguimiento de incidentes. Permite registrar un
+          problema (tipo, mesa y descripción), ver los pendientes y marcarlos como resueltos. Es la
+          herramienta de <strong>recuperación de errores</strong> durante la jornada (criterio 9) y
+          aporta trazabilidad al proceso.
+        </figcaption>
+      </figure>
+
+      <h3>5.4. Tribunal Electoral</h3>
+      <figure>
+        <img src="img/figura-9.png" alt="Panel del tribunal electoral" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';" />
+        <div class="placeholder" style="display:none">📸 Falta la imagen: guardá tu captura como <code>img/figura-9.png</code></div>
+        <figcaption>
+          <strong>Figura 9.</strong> Panel del Tribunal Electoral. Reúne los controles de
+          integridad, las métricas de <strong>rendimiento</strong> (tiempo por voto, votos por
+          minuto, disponibilidad) y el registro de auditoría con todas las acciones. Es la interfaz
+          orientada a la <strong>prevención de errores y fraude</strong> y a la certificación de los
+          resultados (criterios 5 y 9).
+        </figcaption>
+      </figure>
+
+      <h3>5.5. Recuperación de errores (transversal)</h3>
+      <figure>
+        <img src="img/figura-10.png" alt="Mensaje de validación" onerror="this.style.display='none';this.nextElementSibling.style.display='flex';" />
+        <div class="placeholder" style="display:none">📸 Falta la imagen: guardá tu captura como <code>img/figura-10.png</code></div>
+        <figcaption>
+          <strong>Figura 10.</strong> Ejemplo de mensaje de error. Los avisos indican qué pasó y
+          cómo solucionarlo («Ingresá un DNI válido…»), en lugar de dejar la pantalla sin respuesta.
+          Todos los avisos usan el mismo estilo (criterios 4 y 9).
+        </figcaption>
+      </figure>
+
+      <!-- ===================== 6 ===================== -->
+      <h2>6. Cómo se cumple cada criterio por rol</h2>
+      <table>
+        <thead>
+          <tr><th>Criterio</th><th>Dónde se ve en la interfaz</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>Visibilidad del estado</td><td>Indicador de pasos, contadores de votos, barras de avance, «Votación abierta/cerrada», avisos emergentes y número de comprobante.</td></tr>
+          <tr><td>Coincidencia</td><td>Lenguaje claro en español («Elegí tu candidato/a», «Deshacer voto»), íconos y nombres reales (mesa, DNI, padrón).</td></tr>
+          <tr><td>Control y libertad</td><td>Botón «Corregir» antes de confirmar, «Deshacer voto», abrir/cerrar mesas, cancelar en todos los diálogos (tecla Esc).</td></tr>
+          <tr><td>Consistencia</td><td>Un único estilo de botones, tarjetas, colores por rol y avisos en todas las pantallas.</td></tr>
+          <tr><td>Prevención de errores</td><td>Validación del DNI, «Continuar» deshabilitado sin selección, confirmación antes de votar/cerrar/certificar, bloqueo del doble voto.</td></tr>
+          <tr><td>Reconocer antes que recordar</td><td>Boleta con nombre, partido, lista y lema; resumen del voto; estados marcados con color.</td></tr>
+          <tr><td>Flexibilidad y eficiencia</td><td>Acciones masivas en mesas, formularios cortos, ordenamiento y filtros de información.</td></tr>
+          <tr><td>Estética y diseño minimalista</td><td>Una tarea principal por pantalla, espaciado amplio y jerarquía visual clara.</td></tr>
+          <tr><td>Recuperación de errores</td><td>Deshacer el voto (15 s), corregir antes de confirmar, resolver incidentes, solicitar recuento, mensajes de error explicativos.</td></tr>
+          <tr><td>Ayuda y documentación</td><td>Sección «¿Necesitás ayuda?» en el flujo del votante y textos de apoyo en los formularios.</td></tr>
+        </tbody>
+      </table>
+
+      <!-- ===================== 7 ===================== -->
+      <h2>7. Conclusión</h2>
+      <p>
+        El sistema resuelve la consigna al ofrecer una interfaz por cada tipo de participante y al
+        <strong>priorizar los criterios heurísticos según lo que cada rol necesita</strong>. En
+        particular, se hizo hincapié en la <strong>recuperación de errores</strong>, que es el
+        punto donde coinciden votantes, candidatos, responsables y tribunal, junto con la
+        <strong>prevención de errores, la velocidad y la trazabilidad</strong> del proceso.
+      </p>
+      <p>
+        El resultado es un prototipo navegable que permite demostrar, pantalla por pantalla, cómo
+        la interfaz acompaña la captura de datos y da confianza en que los votos se cuentan
+        correctamente.
+      </p>
+
+      <h2>8. Aspectos técnicos</h2>
+      <ul>
+        <li>Aplicación web desarrollada con <strong>React</strong> y <strong>Vite</strong>.</li>
+        <li><strong>Sin base de datos:</strong> el estado se guarda en el navegador (localStorage).</li>
+        <li>Diseño responsive con <strong>tema claro y oscuro</strong>.</li>
+        <li>Código accesible: navegación por teclado, foco visible y atributos <code>aria-*</code>.</li>
+        <li>Ejecución: <code>npm install</code> y luego <code>npm run dev</code>.</li>
+      </ul>
+
+      <div class="firma">
+        Informe generado como parte del trabajo práctico de interfaz de usuario. Las figuras
+        corresponden a capturas del sistema en funcionamiento.
+      </div>
+    </div>
+  </body>
+</html>
