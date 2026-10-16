@@ -1,6 +1,7 @@
 import { useState } from 'react'
+import Volver from '../back/buttonback' 
 
-export default function VoterIdentify({ dni, onDniChange, onContinue }) {
+export default function VoterIdentify({ dni, onDniChange, onContinue, onVolverInicio }) {
   const [error, setError] = useState('')
   const [showHelp, setShowHelp] = useState(false)
 
@@ -17,6 +18,7 @@ export default function VoterIdentify({ dni, onDniChange, onContinue }) {
 
   return (
     <div className="panel-card">
+      <Volver onClick={onVolverInicio} titulo="Volver a selección de roles"/>
       <p className="step-kicker">Paso 1 de 3</p>
       <h2 className="panel-title">Identificate para votar</h2>
       <p className="panel-sub">

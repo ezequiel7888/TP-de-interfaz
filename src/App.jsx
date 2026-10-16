@@ -1,8 +1,10 @@
 import { useState } from 'react'
+import { Routes, Route } from 'react-router-dom'
 import { ElectionProvider, useElection } from './state/ElectionContext.jsx'
 import { ToastProvider, useToast } from './components/common/Toast.jsx'
-import ConfirmDialog from './components/common/ConfirmDialog.jsx'
 import { useTheme } from './hooks/useTheme.js'
+import Volver from './components/back/buttonback.jsx'
+import ConfirmDialog from './components/common/ConfirmDialog.jsx'
 import RoleSelect from './components/RoleSelect.jsx'
 import AppHeader from './components/AppHeader.jsx'
 import VoterFlow from './components/voter/VoterFlow.jsx'
@@ -30,6 +32,7 @@ function Workspace() {
         Saltar al contenido
       </a>
 
+
       <AppHeader
         role={role}
         onChangeRole={() => setRole(null)}
@@ -40,14 +43,14 @@ function Workspace() {
 
       <main id="contenido" className="container">
         {!role && <RoleSelect onSelect={setRole} />}
-        {role === 'votante' && <VoterFlow />}
-        {role === 'candidato' && <CandidatePanel />}
-        {role === 'responsable' && <OfficialPanel />}
-        {role === 'tribunal' && <TribunalPanel />}
+        {role === 'votante' && (<VoterFlow onVolverInicio={() => setRole(null)} />)}
+        {role === 'candidato' && (<CandidatePanel onVolverInicio={() => setRole(null)} />)}
+        {role === 'responsable' && (<OfficialPanel onVolverInicio={() => setRole(null)} />)}
+        {role === 'tribunal' && (<TribunalPanel onVolverInicio={() => setRole(null)}/>)}
       </main>
 
       <footer className="footer">
-        <p>Trabajo de interfaz · Sistema de votación · React + Vite · Sin base de datos</p>
+        <p>Trabajo de interfaz · Sistema de votación</p>
       </footer>
 
       <ConfirmDialog

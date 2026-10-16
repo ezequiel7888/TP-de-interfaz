@@ -3,8 +3,9 @@ import { useElection } from '../../state/ElectionContext.jsx'
 import { useToast } from '../common/Toast.jsx'
 import ConfirmDialog from '../common/ConfirmDialog.jsx'
 import { Card, StatCard, Badge, formatDateTime } from '../common/ui.jsx'
+import Volver from '../back/buttonback.jsx'
 
-export default function TribunalPanel() {
+export default function TribunalPanel({ onVolverInicio }) {
   const { mesas, totalVotes, totalPadron, participation, incidents, audit, status, setStatus, certify, addAudit } =
     useElection()
   const toast = useToast()
@@ -39,6 +40,7 @@ export default function TribunalPanel() {
   return (
     <div className="panel-page">
       <div className="page-head">
+        <Volver onClick={onVolverInicio} titulo="Volver a selección de roles"/>
         <div>
           <h2 className="page-title">⚖️ Panel del Tribunal Electoral</h2>
           <p className="page-sub">Integridad, rendimiento y certificación del proceso.</p>

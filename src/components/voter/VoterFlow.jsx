@@ -7,7 +7,7 @@ import VoterReceipt from './VoterReceipt.jsx'
 
 const STEP_LABELS = ['Identificación', 'Boleta', 'Confirmación']
 
-export default function VoterFlow() {
+export default function VoterFlow({ onVolverInicio }) {
   const { myVote, status } = useElection()
   const [step, setStep] = useState(() => (myVote ? 'receipt' : 'identify'))
   const [dni, setDni] = useState('')
@@ -54,7 +54,12 @@ export default function VoterFlow() {
       )}
 
       {step === 'identify' && (
-        <VoterIdentify dni={dni} onDniChange={setDni} onContinue={() => setStep('ballot')} />
+       <VoterIdentify
+          dni={dni}
+          onDniChange={setDni}
+          onContinue={() => setStep('ballot')}
+          onVolverInicio={onVolverInicio}
+       />
       )}
 
       {step === 'ballot' && (

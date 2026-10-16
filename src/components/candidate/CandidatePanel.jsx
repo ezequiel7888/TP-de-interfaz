@@ -3,8 +3,9 @@ import { useElection } from '../../state/ElectionContext.jsx'
 import { useToast } from '../common/Toast.jsx'
 import ConfirmDialog from '../common/ConfirmDialog.jsx'
 import { Card, StatCard, ProgressBar, Avatar, Badge, formatDateTime } from '../common/ui.jsx'
+import Volver from '../back/buttonback.jsx'
 
-export default function CandidatePanel() {
+export default function CandidatePanel({ onVolverInicio }) {
   const { candidates, votes, blankId, totalVotes, mesas, incidents, audit, recountRequests, requestRecount } =
     useElection()
   const toast = useToast()
@@ -33,6 +34,7 @@ export default function CandidatePanel() {
   return (
     <div className="panel-page">
       <div className="page-head">
+        <Volver onClick={onVolverInicio} titulo="Volver a selección de roles"/>
         <div>
           <h2 className="page-title">🤝 Panel del Candidato</h2>
           <p className="page-sub">Transparencia del escrutinio y control de errores.</p>

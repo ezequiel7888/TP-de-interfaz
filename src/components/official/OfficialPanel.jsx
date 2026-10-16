@@ -3,8 +3,9 @@ import { useElection } from '../../state/ElectionContext.jsx'
 import { useToast } from '../common/Toast.jsx'
 import ConfirmDialog from '../common/ConfirmDialog.jsx'
 import { Card, StatCard, ProgressBar, Badge, formatDateTime } from '../common/ui.jsx'
+import Volver from '../back/buttonback.jsx'
 
-export default function OfficialPanel() {
+export default function OfficialPanel({ onVolverInicio }) {
   const { mesas, incidents, incidentTypes, totalVotes, participation, setMesaEstado, setAllMesas, addIncident, resolveIncident } =
     useElection()
   const toast = useToast()
@@ -38,6 +39,7 @@ export default function OfficialPanel() {
   return (
     <div className="panel-page">
       <div className="page-head">
+        <Volver onClick={onVolverInicio} titulo="Volver a selección de roles"/>
         <div>
           <h2 className="page-title">🧑‍💼 Panel del Responsable de las Elecciones</h2>
           <p className="page-sub">Coordinación de mesas, incidentes y asistencia durante la jornada.</p>
