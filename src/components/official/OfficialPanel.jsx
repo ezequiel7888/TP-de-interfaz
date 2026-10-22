@@ -6,7 +6,7 @@ import { Card, StatCard, ProgressBar, Badge, formatDateTime } from '../common/ui
 import Volver from '../back/buttonback.jsx'
 
 export default function OfficialPanel({ onVolverInicio }) {
-  const { mesas, incidents, incidentTypes, totalVotes, participation, setMesaEstado, setAllMesas, addIncident, resolveIncident } =
+  const { mesas, incidents, incidentTypes, totalVotes, participation, status, setMesaEstado, setAllMesas, addIncident, resolveIncident } =
     useElection()
   const toast = useToast()
   const [form, setForm] = useState({ mesaId: '', tipo: incidentTypes[0], descripcion: '' })
@@ -33,7 +33,14 @@ export default function OfficialPanel({ onVolverInicio }) {
   const toggleMesa = (mesa) => {
     const nuevo = mesa.estado === 'abierta' ? 'cerrada' : 'abierta'
     setMesaEstado(mesa.id, nuevo)
-    toast.show('info', `Mesa N°${mesa.numero} ${nuevo === 'abierta' ? 'abierta' : 'cerrada'}.`)
+    const mensaje = nuevo === 'abierta'
+      ? status === 'certificada'
+        ? `Mesa N°${mesa.numero} abierta. La elección ya está certificada y no admite nuevos votos.`
+        : status === 'escrutinio'
+          ? `Mesa N°${mesa.numero} abierta y votación reanudada.`
+          : `Mesa N°${mesa.numero} abierta.`
+      : `Mesa N°${mesa.numero} cerrada.`
+    toast.show('info', mensaje)
   }
 
   return (
@@ -50,7 +57,14 @@ export default function OfficialPanel({ onVolverInicio }) {
             className="btn btn-ghost"
             onClick={() => {
               setAllMesas('abierta')
-              toast.show('info', 'Todas las mesas quedaron abiertas.')
+              toast.show(
+                'info',
+                status === 'certificada'
+                  ? 'Todas las mesas quedaron abiertas, pero la elección ya está certificada y no admite nuevos votos.'
+                  : status === 'escrutinio'
+                    ? 'Todas las mesas quedaron abiertas y la votación se reanudó.'
+                    : 'Todas las mesas quedaron abiertas.',
+              )
             }}
           >
             Abrir todas

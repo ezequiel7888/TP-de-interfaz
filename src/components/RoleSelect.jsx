@@ -14,6 +14,7 @@ export default function RoleSelect({ onSelect }) {
         <p className="hero-sub">
           {election.ciudad} · {election.fecha} · {election.horario}
         </p>
+        <p className="notice notice-info">{election.aclaracion} Intendente actual: Daniel Passerini; viceintendente: Javier Pretto.</p>
         <div className="hero-stats">
           <StatCard label="Votos registrados" value={totalVotes} icon="📊" tone="primary" />
           <StatCard label="Mesas abiertas" value={`${abiertas} / ${mesas.length}`} icon="🏛️" tone="ok" />

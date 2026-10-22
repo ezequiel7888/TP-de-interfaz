@@ -32,11 +32,7 @@ export default function AppHeader({ role, onChangeRole, theme, onToggleTheme, on
             📊 {totalVotes}
           </span>
           {role && <span className="chip chip-role">Rol: {ROLE_LABELS[role]}</span>}
-          {role && (
-            <button type="button" className="btn btn-ghost btn-sm" onClick={onChangeRole}>
-              ↩️ Cambiar rol
-            </button>
-          )}
+          
           <button type="button" className="btn btn-ghost btn-sm" onClick={onReset}>
             ♻️ Reiniciar demo
           </button>

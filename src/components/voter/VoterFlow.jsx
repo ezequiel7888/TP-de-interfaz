@@ -8,8 +8,10 @@ import VoterReceipt from './VoterReceipt.jsx'
 const STEP_LABELS = ['Identificación', 'Boleta', 'Confirmación']
 
 export default function VoterFlow({ onVolverInicio }) {
-  const { myVote, status } = useElection()
-  const [step, setStep] = useState(() => (myVote ? 'receipt' : 'identify'))
+  const { myVote, status, mesas } = useElection()
+  const hayMesasAbiertas = mesas.some((mesa) => mesa.estado === 'abierta')
+  const votacionNoDisponible = status !== 'abierta' || !hayMesasAbiertas
+  const [step, setStep] = useState('identify')
   const [dni, setDni] = useState('')
   const [selected, setSelected] = useState(null)
 
@@ -40,10 +42,17 @@ export default function VoterFlow({ onVolverInicio }) {
         ))}
       </ol>
 
-      {status !== 'abierta' && (
-        <p className="notice notice-warn" role="alert">
-          La votación no está abierta en este momento. No se pueden emitir votos.
-        </p>
+      {votacionNoDisponible && (
+        <>
+          <p className="notice notice-warn" role="alert">
+            {!hayMesasAbiertas
+              ? 'Todas las mesas están cerradas. No se pueden emitir más votos.'
+              : 'La votación no está abierta en este momento. No se pueden emitir votos.'}
+          </p>
+          <button type="button" className="btn btn-ghost" onClick={onVolverInicio}>
+            ← Volver a selección de roles
+          </button>
+        </>
       )}
 
       {myVote && step !== 'receipt' && (
@@ -53,7 +62,7 @@ export default function VoterFlow({ onVolverInicio }) {
         </p>
       )}
 
-      {step === 'identify' && (
+      {!votacionNoDisponible && step === 'identify' && (
        <VoterIdentify
           dni={dni}
           onDniChange={setDni}
@@ -62,7 +71,7 @@ export default function VoterFlow({ onVolverInicio }) {
        />
       )}
 
-      {step === 'ballot' && (
+      {!votacionNoDisponible && step === 'ballot' && (
         <VoterBallot
           selected={selected}
           onSelect={setSelected}
@@ -71,7 +80,7 @@ export default function VoterFlow({ onVolverInicio }) {
         />
       )}
 
-      {step === 'confirm' && (
+      {!votacionNoDisponible && step === 'confirm' && (
         <VoterConfirm
           dni={dni}
           candidateId={selected}

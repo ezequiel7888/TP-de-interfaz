@@ -17,9 +17,9 @@ function OptionButton({ option, isSelected, onSelect }) {
         {!isBlank && (
           <>
             <span className="ballot-meta">
-              {option.partido} · {option.lista}
+              {option.partido}
             </span>
-            {option.vicepresidente && <span className="ballot-vice">Vice: {option.vicepresidente}</span>}
+            {option.viceintendente && <span className="ballot-vice">Viceintendente: {option.viceintendente}</span>}
           </>
         )}
         <span className="ballot-lema">{option.lema}</span>

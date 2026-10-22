@@ -13,17 +13,21 @@ import OfficialPanel from './components/official/OfficialPanel.jsx'
 import TribunalPanel from './components/tribunal/TribunalPanel.jsx'
 
 function Workspace() {
-  const { resetAll } = useElection()
+  const { resetAll, ready, storageError } = useElection()
   const toast = useToast()
   const { theme, toggleTheme } = useTheme()
   const [role, setRole] = useState(null)
   const [confirmReset, setConfirmReset] = useState(false)
 
-  const handleReset = () => {
-    resetAll()
-    setConfirmReset(false)
-    setRole(null)
-    toast.show('info', 'Demo reiniciada: se restauraron los datos iniciales.')
+  const handleReset = async () => {
+    try {
+      await resetAll()
+      setConfirmReset(false)
+      setRole(null)
+      toast.show('info', 'Demo reiniciada: se restauraron los datos iniciales y se borró el registro de DNI usados.')
+    } catch (error) {
+      toast.show('error', error.message || 'No se pudo reiniciar la demo.')
+    }
   }
 
   return (
@@ -42,11 +46,15 @@ function Workspace() {
       />
 
       <main id="contenido" className="container">
+        {!ready && <p className="notice notice-info" role="status">Conectando con la base de datos…</p>}
+        {storageError && <p className="notice notice-warn" role="alert">{storageError}</p>}
+        {ready && !storageError && <>
         {!role && <RoleSelect onSelect={setRole} />}
         {role === 'votante' && (<VoterFlow onVolverInicio={() => setRole(null)} />)}
         {role === 'candidato' && (<CandidatePanel onVolverInicio={() => setRole(null)} />)}
         {role === 'responsable' && (<OfficialPanel onVolverInicio={() => setRole(null)} />)}
         {role === 'tribunal' && (<TribunalPanel onVolverInicio={() => setRole(null)}/>)}
+        </>}
       </main>
 
       <footer className="footer">

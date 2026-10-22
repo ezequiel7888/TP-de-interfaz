@@ -1,6 +1,9 @@
 # Dependencias
 node_modules/
-
+data/*.sqlite
+data/*.sqlite-shm
+data/*.sqlite-wal
+data/dni-hmac-key
 # Build
 dist/
 dist-ssr/

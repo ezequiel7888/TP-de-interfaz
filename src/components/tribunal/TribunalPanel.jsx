@@ -6,7 +6,7 @@ import { Card, StatCard, Badge, formatDateTime } from '../common/ui.jsx'
 import Volver from '../back/buttonback.jsx'
 
 export default function TribunalPanel({ onVolverInicio }) {
-  const { mesas, totalVotes, totalPadron, participation, incidents, audit, status, setStatus, certify, addAudit } =
+  const { mesas, totalVotes, totalPadron, participation, incidents, audit, status, setStatus, certify } =
     useElection()
   const toast = useToast()
   const [confirmCertify, setConfirmCertify] = useState(false)
@@ -29,12 +29,7 @@ export default function TribunalPanel({ onVolverInicio }) {
 
   const startScrutiny = () => {
     setStatus('escrutinio', 'Tribunal', 'Inicio del escrutinio definitivo.')
-    toast.show('info', 'Escrutinio iniciado.')
-  }
-
-  const fiscalizar = () => {
-    addAudit('Tribunal', 'Fiscalización', 'Revisión manual del conteo de votos.')
-    toast.show('success', 'Fiscalización registrada en la auditoría.')
+    toast.show('info', 'Escrutinio iniciado. El Tribunal puede revisar los votos y el estado de las mesas; los resultados todavía no están certificados.')
   }
 
   return (
@@ -46,14 +41,11 @@ export default function TribunalPanel({ onVolverInicio }) {
           <p className="page-sub">Integridad, rendimiento y certificación del proceso.</p>
         </div>
         <div className="page-actions">
-          <button type="button" className="btn btn-ghost" onClick={fiscalizar}>
-            🔍 Fiscalizar
-          </button>
           <button
             type="button"
             className="btn btn-ghost"
             onClick={startScrutiny}
-            disabled={status === 'certificada'}
+            disabled={status !== 'abierta'}
           >
             ▶ Iniciar escrutinio
           </button>
@@ -101,14 +93,6 @@ export default function TribunalPanel({ onVolverInicio }) {
         <Card title="Rendimiento del sistema" subtitle="Velocidad del proceso de voto">
           <ul className="metric-list">
             <li>
-              <span>Tiempo promedio por voto</span>
-              <strong>38 s</strong>
-            </li>
-            <li>
-              <span>Votos por minuto</span>
-              <strong>24</strong>
-            </li>
-            <li>
               <span>Disponibilidad de mesas</span>
               <strong>99,98%</strong>
             </li>
@@ -155,12 +139,12 @@ export default function TribunalPanel({ onVolverInicio }) {
         onConfirm={() => {
           certify()
           setConfirmCertify(false)
-          toast.show('success', 'Resultados certificados por el Tribunal.')
+          toast.show('success', 'Resultados certificados. La elección queda cerrada y los resultados se consideran definitivos.')
         }}
         onCancel={() => setConfirmCertify(false)}
       >
-        Se declararán los resultados como definitivos y quedará registrado en la auditoría. ¿Confirmás la
-        certificación?
+        Al certificar, la elección queda cerrada y los resultados se consideran definitivos. Esta acción
+        quedará registrada en la auditoría. ¿Confirmás la certificación?
       </ConfirmDialog>
     </div>
   )

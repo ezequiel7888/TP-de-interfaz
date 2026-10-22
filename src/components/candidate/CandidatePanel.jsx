@@ -71,7 +71,7 @@ export default function CandidatePanel({ onVolverInicio }) {
               <span className="rank-info">
                 <span className="rank-name">{row.nombre}</span>
                 <span className="rank-meta">
-                  {row.partido} · {row.lista}
+                  {row.partido}
                 </span>
               </span>
               <span className="rank-bar">

@@ -29,13 +29,17 @@ export default function VoterReceipt({ onRestart }) {
   const mesa = mesas.find((item) => item.id === myVote.mesaId)
   const canUndo = remaining > 0
 
-  const handleUndo = () => {
-    const result = undoVote()
-    if (result.ok) {
-      toast.show('info', 'Voto deshecho. Podés volver a votar.')
-      onRestart()
-    } else {
-      toast.show('error', result.error || 'No se pudo deshacer el voto.')
+  const handleUndo = async () => {
+    try {
+      const result = await undoVote()
+      if (result.ok) {
+        toast.show('info', 'Voto deshecho. Podés volver a votar.')
+        onRestart()
+      } else {
+        toast.show('error', result.error || 'No se pudo deshacer el voto.')
+      }
+    } catch (error) {
+      toast.show('error', error.message || 'No se pudo deshacer el voto.')
     }
   }
 
@@ -58,10 +62,10 @@ export default function VoterReceipt({ onRestart }) {
           <div>
             <p className="summary-name">{option?.nombre}</p>
             <p className="summary-meta">
-              {isBlank ? 'No se elige ningún candidato' : `${option?.partido} · ${option?.lista}`}
+              {isBlank ? 'No se elige ningún candidato' : option?.partido}
             </p>
-            {!isBlank && option?.vicepresidente && (
-              <p className="summary-meta">Vice: {option.vicepresidente}</p>
+            {!isBlank && option?.viceintendente && (
+              <p className="summary-meta">Viceintendente: {option.viceintendente}</p>
             )}
           </div>
         </div>

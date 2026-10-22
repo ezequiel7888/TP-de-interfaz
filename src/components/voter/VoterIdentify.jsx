@@ -1,11 +1,14 @@
 import { useState } from 'react'
+import { useElection } from '../../state/ElectionContext.jsx'
 import Volver from '../back/buttonback' 
 
 export default function VoterIdentify({ dni, onDniChange, onContinue, onVolverInicio }) {
+  const { checkDni } = useElection()
   const [error, setError] = useState('')
   const [showHelp, setShowHelp] = useState(false)
+  const [checking, setChecking] = useState(false)
 
-  const submit = (event) => {
+  const submit = async (event) => {
     event.preventDefault()
     const clean = dni.replace(/\D/g, '')
     if (clean.length < 7 || clean.length > 8) {
@@ -13,7 +16,18 @@ export default function VoterIdentify({ dni, onDniChange, onContinue, onVolverIn
       return
     }
     setError('')
-    onContinue()
+    setChecking(true)
+    try {
+      if (await checkDni(clean)) {
+        setError('Este DNI ya registró un voto. No puede votar nuevamente.')
+        return
+      }
+      onContinue()
+    } catch (verificationError) {
+      setError(verificationError.message || 'No se pudo verificar el DNI. Intentá de nuevo.')
+    } finally {
+      setChecking(false)
+    }
   }
 
   return (
@@ -50,12 +64,13 @@ export default function VoterIdentify({ dni, onDniChange, onContinue, onVolverIn
           </p>
         ) : (
           <p id="dni-help" className="field-help">
-            Solo se usan los números. No se guardan datos personales.
+            Se guarda una huella protegida del DNI para evitar votos repetidos. El DNI completo no se
+            guarda; “Reiniciar demo” borra ese registro.
           </p>
         )}
 
-        <button type="submit" className="btn btn-primary btn-block">
-          Comenzar a votar
+        <button type="submit" className="btn btn-primary btn-block" disabled={checking}>
+          {checking ? 'Verificando DNI…' : 'Comenzar a votar'}
         </button>
       </form>
 

@@ -1,116 +1,68 @@
-// Datos base de la elección de intendente.
-// Cambiá acá los candidatos, la ciudad, la fecha y las mesas.
-
+// Datos de la elección municipal de Córdoba Capital del 23 de julio de 2023.
+// Las candidaturas se contrastaron con la Resolución 17 de la Junta Electoral Municipal
+// y el listado periodístico de las 11 listas oficializadas.
 export const ELECTION = {
   ciudad: 'Córdoba Capital',
   distrito: 'Capital',
   cargo: 'Intendente/a',
-  fecha: '25 de octubre de 2026',
+  fecha: '23 de julio de 2023 · elección histórica',
   horario: '08:00 a 18:00 hs',
-  anio: 2026,
+  anio: 2023,
+  fuentes: [
+    'https://tribunaldefaltas.cordoba.gov.ar/wp-content/uploads/2023/06/Resolucion-n%C2%B017-Junta-Electoral-Municipal.pdf',
+    'https://www.lanacion.com.ar/politica/quienes-son-los-candidatos-a-intendente-en-cordoba-capital-nid21072023/',
+    'https://cordoba.gob.ar/areas-de-gobierno-2025/',
+  ],
+  aclaracion: 'Candidaturas reales de 2023; los votos de esta aplicación son solo de prueba y no son resultados oficiales.',
 }
 
-// Candidatos a intendente, cada uno con su vicepresidente.
-export const CANDIDATES = [
-  {
-    id: 'c1',
-    nombre: 'Ana Torres',
-    vicepresidente: 'Julián Pizarro',
-    lista: 'Lista 12',
-    partido: 'Frente Vecinal',
-    lema: 'Cercanía y trabajo',
-    color: '#2563eb',
-    iniciales: 'AT',
-  },
-  {
-    id: 'c2',
-    nombre: 'Bruno Medina',
-    vicepresidente: 'Noelia Cabrera',
-    lista: 'Lista 5',
-    partido: 'Unión por la Ciudad',
-    lema: 'Gestión y desarrollo',
-    color: '#16a34a',
-    iniciales: 'BM',
-  },
-  {
-    id: 'c3',
-    nombre: 'Carla Ferreyra',
-    vicepresidente: 'Martín Quiroga',
-    lista: 'Lista 23',
-    partido: 'Proyecto Común',
-    lema: 'Todos contamos',
-    color: '#ea580c',
-    iniciales: 'CF',
-  },
-  {
-    id: 'c4',
-    nombre: 'Diego Salas',
-    vicepresidente: 'Rocío Aguirre',
-    lista: 'Lista 7',
-    partido: 'Renovación Municipal',
-    lema: 'Un nuevo rumbo',
-    color: '#9333ea',
-    iniciales: 'DS',
-  },
+const colors = ['#2563eb', '#16a34a', '#ea580c', '#9333ea', '#0891b2', '#db2777', '#ca8a04', '#4f46e5', '#059669', '#dc2626', '#64748b']
+const candidates = [
+  ['passerini', 'Daniel Passerini', 'Javier Pretto', 'Hacemos Unidos por Córdoba'],
+  ['de-loredo', 'Rodrigo de Loredo', 'Soher El Sukaria', 'Juntos por el Cambio'],
+  ['sikora', 'Verónica Sikora', '', 'La Libertad Primero'],
+  ['quinteros', 'Juan Pablo Quinteros', '', 'Somos Córdoba'],
+  ['vilches', 'Laura Vilches', '', 'Frente de Izquierda y de Trabajadores-Unidad'],
+  ['spaccesi', 'Humberto Spaccesi', '', 'Creo en Córdoba de Todos'],
+  ['gonzalez-olguin', 'Eduardo González Olguín', '', 'Partido Humanista'],
+  ['orgaz', 'César Orgaz', '', 'Encuentro Vecinal Córdoba'],
+  ['scala', 'Jorge Scala', '', 'Partido Demócrata'],
+  ['gimenez', 'Romina Anahí Giménez', '', 'Unión Popular Federal'],
+  ['bustos', 'Miguel Bustos', '', 'Partido Popular Córdoba'],
 ]
 
-// Opción especial: voto en blanco.
-export const BLANK_VOTE = {
-  id: 'blanco',
-  nombre: 'Voto en blanco',
-  vicepresidente: '',
+export const CANDIDATES = candidates.map(([id, nombre, viceintendente, partido], index) => ({
+  id,
+  nombre,
+  viceintendente,
   lista: '',
-  partido: '',
-  lema: 'No elige ningún candidato',
-  color: '#6b7280',
-  iniciales: '—',
-  tipo: 'blanco',
+  partido,
+  lema: 'Candidatura oficializada para la elección municipal de 2023',
+  color: colors[index],
+  iniciales: nombre.split(/\s+/).slice(0, 2).map((part) => part[0]).join('').toUpperCase(),
+}))
+
+export const BLANK_VOTE = {
+  id: 'blanco', nombre: 'Voto en blanco', viceintendente: '', lista: '', partido: '',
+  lema: 'No elige ningún candidato', color: '#6b7280', iniciales: '—', tipo: 'blanco',
 }
 
-// Todo lo que puede elegir el votante en la boleta.
 export const BALLOT_OPTIONS = [...CANDIDATES, BLANK_VOTE]
+export const DEMO_VOTES = Object.fromEntries(BALLOT_OPTIONS.map((option) => [option.id, 0]))
 
-// Votos de ejemplo para que los paneles arranquen con datos visibles.
-export const DEMO_VOTES = { c1: 1240, c2: 1118, c3: 986, c4: 704, blanco: 96 }
-
-// Mesas de votación (la suma de votos coincide con el total de DEMO_VOTES = 4144).
+// Mesas ficticias para la demostración de la interfaz; no son una distribución oficial.
 export const DEMO_MESAS = [
-  { id: 'M1', numero: 1, responsable: 'Marta Gómez', padron: 800, votos: 736, estado: 'abierta' },
-  { id: 'M2', numero: 2, responsable: 'Raúl Ibarra', padron: 800, votos: 716, estado: 'abierta' },
-  { id: 'M3', numero: 3, responsable: 'Silvia Núñez', padron: 800, votos: 706, estado: 'abierta' },
-  { id: 'M4', numero: 4, responsable: 'Hugo Peralta', padron: 800, votos: 676, estado: 'abierta' },
-  { id: 'M5', numero: 5, responsable: 'Lucía Ramírez', padron: 800, votos: 666, estado: 'abierta' },
-  { id: 'M6', numero: 6, responsable: 'Nicolás Vera', padron: 800, votos: 644, estado: 'abierta' },
+  { id: 'M1', numero: 1, responsable: 'Responsable de mesa 1', padron: 800, votos: 0, estado: 'abierta' },
+  { id: 'M2', numero: 2, responsable: 'Responsable de mesa 2', padron: 800, votos: 0, estado: 'abierta' },
+  { id: 'M3', numero: 3, responsable: 'Responsable de mesa 3', padron: 800, votos: 0, estado: 'abierta' },
+  { id: 'M4', numero: 4, responsable: 'Responsable de mesa 4', padron: 800, votos: 0, estado: 'abierta' },
+  { id: 'M5', numero: 5, responsable: 'Responsable de mesa 5', padron: 800, votos: 0, estado: 'abierta' },
+  { id: 'M6', numero: 6, responsable: 'Responsable de mesa 6', padron: 800, votos: 0, estado: 'abierta' },
 ]
 
-// Descripción de cada rol participante y sus prioridades (según la consigna).
 export const ROLES = [
-  {
-    id: 'votante',
-    icon: '🧑‍🤝‍🧑',
-    nombre: 'Votante',
-    descripcion: 'Emite su voto de forma simple y segura.',
-    prioridades: ['Deshacer errores', 'Aprendizaje rápido', 'Velocidad', 'Confianza en el conteo'],
-  },
-  {
-    id: 'candidato',
-    icon: '🤝',
-    nombre: 'Candidato',
-    descripcion: 'Sigue la transparencia y puede pedir recuento.',
-    prioridades: ['Prevención de errores', 'Recuperación', 'Eficiencia y velocidad'],
-  },
-  {
-    id: 'responsable',
-    icon: '🧑‍💼',
-    nombre: 'Responsable de las elecciones',
-    descripcion: 'Coordina las mesas y resuelve incidentes.',
-    prioridades: ['Eficiencia', 'Prevenir y recuperar errores', 'Aprendizaje sencillo', 'Reconocimiento'],
-  },
-  {
-    id: 'tribunal',
-    icon: '⚖️',
-    nombre: 'Tribunal Electoral',
-    descripcion: 'Fiscaliza la honestidad del proceso.',
-    prioridades: ['Prevención de errores', 'Rendimiento y velocidad', 'Recuperación', 'Auditoría'],
-  },
+  { id: 'votante', icon: '🧑‍🤝‍🧑', nombre: 'Votante', descripcion: 'Emite su voto de forma simple y segura.', prioridades: ['Deshacer errores', 'Aprendizaje rápido', 'Velocidad', 'Confianza en el conteo'] },
+  { id: 'candidato', icon: '🤝', nombre: 'Candidato', descripcion: 'Sigue la transparencia y puede pedir recuento.', prioridades: ['Prevención de errores', 'Recuperación', 'Eficiencia y velocidad'] },
+  { id: 'responsable', icon: '🧑‍💼', nombre: 'Responsable de las elecciones', descripcion: 'Coordina las mesas y resuelve incidentes.', prioridades: ['Eficiencia', 'Prevenir y recuperar errores', 'Aprendizaje sencillo', 'Reconocimiento'] },
+  { id: 'tribunal', icon: '⚖️', nombre: 'Tribunal Electoral', descripcion: 'Fiscaliza la honestidad del proceso.', prioridades: ['Prevención de errores', 'Rendimiento y velocidad', 'Recuperación', 'Auditoría'] },
 ]
